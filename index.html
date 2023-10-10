@@ -1,1 +1,63 @@
-<h1>Hello!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RouteMaster</title>
+</head>
+<body>
+    <h1>RouteMaster - Road Trip Planner</h1>
+    <div>
+        <label for="origin">Enter starting location (latitude, longitude):</label>
+        <input type="text" id="origin" placeholder="e.g., 37.7749,-122.4194">
+    </div>
+    <div>
+        <label for="destination">Enter ending location (latitude, longitude):</label>
+        <input type="text" id="destination" placeholder="e.g., 34.0522,-118.2437">
+    </div>
+    <button onclick="calculateDistance()">Calculate Distance</button>
+    <div>
+        <h2>Trip Details:</h2>
+        <p id="distance">Distance: N/A km</p>
+    </div>
+    <div id="map"></div>
+
+    <script>
+        function calculateDistance() {
+            const originInput = document.getElementById('origin');
+            const destinationInput = document.getElementById('destination');
+            const distanceDisplay = document.getElementById('distance');
+            const mapContainer = document.getElementById('map');
+
+            const origin = originInput.value;
+            const destination = destinationInput.value;
+
+            // Parse the input coordinates
+            const [originLat, originLng] = origin.split(',').map(parseFloat);
+            const [destLat, destLng] = destination.split(',').map(parseFloat);
+
+            // Calculate straight-line distance
+            const distance = Math.sqrt(
+                Math.pow(destLat - originLat, 2) +
+                Math.pow(destLng - originLng, 2)
+            );
+
+            distanceDisplay.textContent = `Distance: ${distance.toFixed(2)} km`;
+
+            // Embed Google Maps iframe
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1697788.5733075673!2d${originLng}!3d${originLat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1696616270451!5m2!1sen!2sus`;
+            iframe.width = '600';
+            iframe.height = '450';
+            iframe.style.border = '0';
+            iframe.allowfullscreen = '';
+            iframe.loading = 'lazy';
+            iframe.referrerpolicy = 'no-referrer-when-downgrade';
+
+            // Clear previous map and add the new one
+            mapContainer.innerHTML = '';
+            mapContainer.appendChild(iframe);
+        }
+    </script>
+</body>
+</html>
