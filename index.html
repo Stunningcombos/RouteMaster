@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RouteMaster</title>
+    <!-- Replace 'YOUR_GOOGLE_MAPS_API_KEY' with your API key -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CBsERzAhOxoJ0P7bmLEu8uORLp-dFbM&callback=initMap" async defer></script>
 </head>
 <body>
     <h1>RouteMaster - Road Trip Planner</h1>
@@ -20,14 +22,25 @@
         <h2>Trip Details:</h2>
         <p id="distance">Distance: N/A km</p>
     </div>
-    <div id="map"></div>
+    <div id="map" style="height: 400px;"></div>
 
     <script>
+        let map;
+        let originMarker;
+        let destinationMarker;
+        let line;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 0, lng: 0 },
+                zoom: 3
+            });
+        }
+
         function calculateDistance() {
             const originInput = document.getElementById('origin');
             const destinationInput = document.getElementById('destination');
             const distanceDisplay = document.getElementById('distance');
-            const mapContainer = document.getElementById('map');
 
             const origin = originInput.value;
             const destination = destinationInput.value;
@@ -44,19 +57,50 @@
 
             distanceDisplay.textContent = `Distance: ${distance.toFixed(2)} km`;
 
-            // Embed Google Maps iframe
-            const iframe = document.createElement('iframe');
-            iframe.src = `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1697788.5733075673!2d${originLng}!3d${originLat}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sus!4v1696616270451!5m2!1sen!2sus`;
-            iframe.width = '600';
-            iframe.height = '450';
-            iframe.style.border = '0';
-            iframe.allowfullscreen = '';
-            iframe.loading = 'lazy';
-            iframe.referrerpolicy = 'no-referrer-when-downgrade';
+            // Clear previous markers and line
+            if (originMarker) {
+                originMarker.setMap(null);
+            }
+            if (destinationMarker) {
+                destinationMarker.setMap(null);
+            }
+            if (line) {
+                line.setMap(null);
+            }
 
-            // Clear previous map and add the new one
-            mapContainer.innerHTML = '';
-            mapContainer.appendChild(iframe);
+            // Add markers for origin and destination
+            originMarker = new google.maps.Marker({
+                position: { lat: originLat, lng: originLng },
+                map: map,
+                title: 'Origin',
+                icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            });
+            destinationMarker = new google.maps.Marker({
+                position: { lat: destLat, lng: destLng },
+                map: map,
+                title: 'Destination',
+                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+            });
+
+            // Draw a red line between the two locations
+            line = new google.maps.Polyline({
+                path: [
+                    { lat: originLat, lng: originLng },
+                    { lat: destLat, lng: destLng }
+                ],
+                geodesic: true,
+                strokeColor: '#FF0000',
+                strokeOpacity: 1.0,
+                strokeWeight: 2
+            });
+
+            line.setMap(map);
+
+            // Center the map on the midpoint between the two locations
+            const centerLat = (originLat + destLat) / 2;
+            const centerLng = (originLng + destLng) / 2;
+            map.setCenter({ lat: centerLat, lng: centerLng });
+            map.setZoom(8);
         }
     </script>
 </body>
