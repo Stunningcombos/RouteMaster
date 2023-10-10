@@ -10,17 +10,17 @@
 <body>
     <h1>RouteMaster - Road Trip Planner</h1>
     <div>
-        <label for="origin">Enter starting location (latitude, longitude):</label>
-        <input type="text" id="origin" placeholder="e.g., 37.7749,-122.4194">
+        <label for="origin">Enter starting location (e.g., address or place name):</label>
+        <input type="text" id="origin" placeholder="e.g., San Francisco, CA">
     </div>
     <div>
-        <label for="destination">Enter ending location (latitude, longitude):</label>
-        <input type="text" id="destination" placeholder="e.g., 34.0522,-118.2437">
+        <label for="destination">Enter ending location (e.g., address or place name):</label>
+        <input type="text" id="destination" placeholder="e.g., Los Angeles, CA">
     </div>
     <button onclick="calculateDistance()">Calculate Distance</button>
     <div>
         <h2>Trip Details:</h2>
-        <p id="distance">Distance: N/A km</p>
+        <p id="distance">Distance: N/A</p>
     </div>
     <div id="map" style="height: 400px;"></div>
 
@@ -28,13 +28,18 @@
         let map;
         let originMarker;
         let destinationMarker;
-        let line;
+        let directionsService;
+        let directionsRenderer;
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 0, lng: 0 },
                 zoom: 3
             });
+
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
         }
 
         function calculateDistance() {
@@ -45,62 +50,22 @@
             const origin = originInput.value;
             const destination = destinationInput.value;
 
-            // Parse the input coordinates
-            const [originLat, originLng] = origin.split(',').map(parseFloat);
-            const [destLat, destLng] = destination.split(',').map(parseFloat);
+            const request = {
+                origin: origin,
+                destination: destination,
+                travelMode: 'DRIVING'
+            };
 
-            // Calculate straight-line distance
-            const distance = Math.sqrt(
-                Math.pow(destLat - originLat, 2) +
-                Math.pow(destLng - originLng, 2)
-            );
-
-            distanceDisplay.textContent = `Distance: ${distance.toFixed(2)} km`;
-
-            // Clear previous markers and line
-            if (originMarker) {
-                originMarker.setMap(null);
-            }
-            if (destinationMarker) {
-                destinationMarker.setMap(null);
-            }
-            if (line) {
-                line.setMap(null);
-            }
-
-            // Add markers for origin and destination
-            originMarker = new google.maps.Marker({
-                position: { lat: originLat, lng: originLng },
-                map: map,
-                title: 'Origin',
-                icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            directionsService.route(request, function(response, status) {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(response);
+                    const route = response.routes[0];
+                    const distance = route.legs[0].distance.text;
+                    distanceDisplay.textContent = `Distance: ${distance}`;
+                } else {
+                    distanceDisplay.textContent = 'Unable to calculate distance.';
+                }
             });
-            destinationMarker = new google.maps.Marker({
-                position: { lat: destLat, lng: destLng },
-                map: map,
-                title: 'Destination',
-                icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
-            });
-
-            // Draw a red line between the two locations
-            line = new google.maps.Polyline({
-                path: [
-                    { lat: originLat, lng: originLng },
-                    { lat: destLat, lng: destLng }
-                ],
-                geodesic: true,
-                strokeColor: '#FF0000',
-                strokeOpacity: 1.0,
-                strokeWeight: 2
-            });
-
-            line.setMap(map);
-
-            // Center the map on the midpoint between the two locations
-            const centerLat = (originLat + destLat) / 2;
-            const centerLng = (originLng + destLng) / 2;
-            map.setCenter({ lat: centerLat, lng: centerLng });
-            map.setZoom(8);
         }
     </script>
 </body>
