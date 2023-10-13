@@ -41,6 +41,11 @@
             directionsService = new google.maps.DirectionsService();
             directionsRenderer = new google.maps.DirectionsRenderer();
             directionsRenderer.setMap(map);
+
+            // Add click event listener to the map
+            map.addListener('click', function(event) {
+                handleMapClick(event.latLng);
+            });
         }
 
         function searchLocation(inputFieldId) {
@@ -54,6 +59,30 @@
                     map.setCenter(locationCoordinates);
                 }
             });
+        }
+
+        function handleMapClick(location) {
+            // Remove existing markers
+            if (originMarker) {
+                originMarker.setMap(null);
+            }
+
+            if (destinationMarker) {
+                destinationMarker.setMap(null);
+            }
+
+            // Add a new marker at the clicked location
+            const marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+
+            // Determine if it's the origin or destination marker
+            if (!originMarker) {
+                originMarker = marker;
+            } else {
+                destinationMarker = marker;
+            }
         }
 
         function calculateDistance() {
