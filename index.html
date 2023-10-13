@@ -1,23 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<center>   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RouteMaster</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CBsERzAhOxoJ0P7bmLEu8uORLp-dFbM&callback=initMap" async defer></script>
-</center>
 </head>
 <body>
-<center>
     <h1>RouteMaster - Road Trip Planner</h1>
     <div>
         <label for="origin">Enter starting location (e.g., address or place name):</label>
         <input type="text" id="origin" placeholder="e.g., San Francisco, CA">
+        <button onclick="searchLocation('origin')">Search</button>
     </div>
     <div>
         <label for="destination">Enter ending location (e.g., address or place name):</label>
         <input type="text" id="destination" placeholder="e.g., Los Angeles, CA">
+        <button onclick="searchLocation('destination')">Search</button>
     </div>
     <button onclick="calculateDistance()">Calculate Distance</button>
     <div>
@@ -27,14 +26,12 @@
     <div id="map" style="height: 400px;"></div>
 
     <script>
-        //Begins Javascript block
         let map;
         let originMarker;
         let destinationMarker;
         let directionsService;
         let directionsRenderer;
 
-        //sets up map creates map object
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
                 center: { lat: 0, lng: 0 },
@@ -45,23 +42,34 @@
             directionsRenderer = new google.maps.DirectionsRenderer();
             directionsRenderer.setMap(map);
         }
-        //self explanitory
+
+        function searchLocation(inputFieldId) {
+            const inputField = document.getElementById(inputFieldId);
+            const location = inputField.value;
+
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: location }, function(results, status) {
+                if (status === 'OK' && results[0].geometry.location) {
+                    const locationCoordinates = results[0].geometry.location;
+                    map.setCenter(locationCoordinates);
+                }
+            });
+        }
+
         function calculateDistance() {
             const originInput = document.getElementById('origin');
             const destinationInput = document.getElementById('destination');
             const distanceDisplay = document.getElementById('distance');
-            
-            //returns values
+
             const origin = originInput.value;
             const destination = destinationInput.value;
-            
-            //requests travelmode.
+
             const request = {
                 origin: origin,
                 destination: destination,
                 travelMode: 'DRIVING'
             };
-            //Utilizes GM assistences to calculate distance and directions. Otherwise produces an error.
+
             directionsService.route(request, function(response, status) {
                 if (status === 'OK') {
                     directionsRenderer.setDirections(response);
@@ -74,6 +82,5 @@
             });
         }
     </script>
-<center>
 </body>
 </html>
