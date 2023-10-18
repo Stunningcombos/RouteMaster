@@ -15,7 +15,7 @@
         <button onclick="searchLocation('origin')">Search</button>
     </div>
     <div>
-        <label for "destination">Enter ending location (e.g., address or place name):</label>
+        <label for="destination">Enter ending location (e.g., address or place name):</label>
         <input type="text" id="destination" placeholder="e.g., Los Angeles, CA">
         <button onclick="searchLocation('destination')">Search</button>
     </div>
@@ -66,6 +66,14 @@
             geocoder.geocode({ address: location }, function(results, status) {
                 if (status === 'OK' && results[0].geometry.location) {
                     const locationCoordinates = results[0].geometry.location;
+
+                    // Create a marker for the searched location
+                    const marker = new google.maps.Marker({
+                        position: locationCoordinates,
+                        map: map
+                    });
+
+                    // Set the map center to the searched location
                     map.setCenter(locationCoordinates);
                 }
             });
@@ -154,5 +162,6 @@
             });
         }
     </script>
+    <script src="firebase.html"></script>
 </body>
 </html>
