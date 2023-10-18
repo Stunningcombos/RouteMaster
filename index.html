@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RouteMaster</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CBsERzAhOxoJ0P7bmLEu8uORLp-dFbM&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CBsERzAhOxoJ0P7bmLEu8uORLp-dFbM&libraries=places&callback=initMap" async defer></script>
 </head>
 <body>
     <h1>RouteMaster - Road Trip Planner</h1>
@@ -14,7 +14,7 @@
         <button onclick="searchLocation('origin')">Search</button>
     </div>
     <div>
-        <label for="destination">Enter ending location (e.g., address or place name):</label>
+        <label for "destination">Enter ending location (e.g., address or place name):</label>
         <input type="text" id="destination" placeholder="e.g., Los Angeles, CA">
         <button onclick="searchLocation('destination')">Search</button>
     </div>
@@ -22,6 +22,10 @@
     <div>
         <h2>Trip Details:</h2>
         <p id="distance">Distance: N/A</p>
+    </div>
+    <div>
+        <h2>Selected Destinations:</h2>
+        <ul id="destination-list"></ul>
     </div>
     <div id="map" style="height: 400px;"></div>
 
@@ -31,6 +35,8 @@
         let destinationMarker;
         let directionsService;
         let directionsRenderer;
+        let placesService;
+        let selectedDestinations = [];
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -41,6 +47,9 @@
             directionsService = new google.maps.DirectionsService();
             directionsRenderer = new google.maps.DirectionsRenderer();
             directionsRenderer.setMap(map);
+
+            // Enable Places services
+            placesService = new google.maps.places.PlacesService(map);
 
             // Add click event listener to the map
             map.addListener('click', function(event) {
@@ -82,7 +91,40 @@
                 originMarker = marker;
             } else {
                 destinationMarker = marker;
+
+                // Use Places API to find nearby places at the destination location
+                placesService.nearbySearch({
+                    location: location,
+                    radius: 1000, // Adjust the radius as needed
+                    type: ['tourist_attraction'] // Specify the type of places you want to display
+                }, function(results, status) {
+                    if (status === 'OK' && results.length > 0) {
+                        // Display nearby places on the map
+                        results.forEach(function(place) {
+                            const placeMarker = new google.maps.Marker({
+                                position: place.geometry.location,
+                                map: map,
+                                title: place.name
+                            });
+
+                            // Allow the user to select a place by clicking on it
+                            placeMarker.addListener('click', function() {
+                                addDestination(place);
+                            });
+                        });
+                    }
+                });
             }
+        }
+
+        function addDestination(place) {
+            selectedDestinations.push(place);
+
+            // Update the list of selected destinations on the webpage
+            const destinationList = document.getElementById('destination-list');
+            const destinationItem = document.createElement('li');
+            destinationItem.textContent = place.name;
+            destinationList.appendChild(destinationItem);
         }
 
         function calculateDistance() {
