@@ -84,10 +84,26 @@
         }
 
         function clearMarkers() {
+            // Clear destination markers
+            if (originMarker) {
+                originMarker.setMap(null);
+            }
+
+            if (destinationMarker) {
+                destinationMarker.setMap(null);
+            }
+
+            // Clear markers created by clicking
             for (let marker of markers) {
                 marker.setMap(null);
             }
-            markers = []; // Clear the markers array
+            
+            // Clear both originMarker and destinationMarker
+            originMarker = null;
+            destinationMarker = null;
+
+            // Clear the markers array
+            markers = [];
         }
 
         function handleMapClick(location) {
