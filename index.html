@@ -38,6 +38,7 @@
         let directionsRenderer;
         let placesService;
         let selectedDestinations = [];
+        let markers = []; // Store markers for easy removal
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -66,17 +67,26 @@
             geocoder.geocode({ address: location }, function(results, status) {
                 if (status === 'OK' && results[0].geometry.location) {
                     const locationCoordinates = results[0].geometry.location;
-
+                    // Clear existing markers
+                    clearMarkers();
                     // Create a marker for the searched location
                     const marker = new google.maps.Marker({
                         position: locationCoordinates,
                         map: map
                     });
-
                     // Set the map center to the searched location
                     map.setCenter(locationCoordinates);
+                    // Store the marker for removal
+                    markers.push(marker);
                 }
             });
+        }
+
+        function clearMarkers() {
+            for (let marker of markers) {
+                marker.setMap(null);
+            }
+            markers = []; // Clear the markers array
         }
 
         function handleMapClick(location) {
