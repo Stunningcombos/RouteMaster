@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RouteMaster</title>
+    <!-- Include your Google Maps API key in the script tag below -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CBsERzAhOxoJ0P7bmLEu8uORLp-dFbM&libraries=places&callback=initMap" async defer></script>
 </head>
 <body>
@@ -14,7 +15,7 @@
         <button onclick="searchLocation('origin')">Search</button>
     </div>
     <div>
-        <label for "destination">Enter ending location (e.g., address or place name):</label>
+        <label for="destination">Enter ending location (e.g., address or place name):</label>
         <input type="text" id="destination" placeholder="e.g., Los Angeles, CA">
         <button onclick="searchLocation('destination')">Search</button>
     </div>
@@ -28,6 +29,9 @@
         <ul id="destination-list"></ul>
     </div>
     <div id="map" style="height: 400px;"></div>
+
+    <!-- Embed the Figma design -->
+    <iframe src="https://www.figma.com/embed?embed_host=share&url=https://www.figma.com/file/7hFphyM6ozeEli12osYo15/RouteMaster-APP-Design-(Community)?type=design&node-id=0-1&mode=design&t=MoniNhhvV0926zSq-0" width="100%" height="600" allowfullscreen></iframe>
 
     <script>
         let map;
@@ -129,29 +133,3 @@
 
         function calculateDistance() {
             const originInput = document.getElementById('origin');
-            const destinationInput = document.getElementById('destination');
-            const distanceDisplay = document.getElementById('distance');
-
-            const origin = originInput.value;
-            const destination = destinationInput.value;
-
-            const request = {
-                origin: origin,
-                destination: destination,
-                travelMode: 'DRIVING'
-            };
-
-            directionsService.route(request, function(response, status) {
-                if (status === 'OK') {
-                    directionsRenderer.setDirections(response);
-                    const route = response.routes[0];
-                    const distance = route.legs[0].distance.text;
-                    distanceDisplay.textContent = `Distance: ${distance}`;
-                } else {
-                    distanceDisplay.textContent = 'Unable to calculate distance.';
-                }
-            });
-        }
-    </script>
-</body>
-</html>
