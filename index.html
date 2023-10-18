@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RouteMaster</title>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CBsERzAhOxoJ0P7bmLEu8uORLp-dFbM&libraries=places&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap" async defer></script>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
@@ -39,7 +39,7 @@
         let directionsRenderer;
         let placesService;
         let selectedDestinations = [];
-        let markers = []; // Store markers for easy removal
+        let clickMarkers = [];
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -51,10 +51,8 @@
             directionsRenderer = new google.maps.DirectionsRenderer();
             directionsRenderer.setMap(map);
 
-            // Enable Places services
             placesService = new google.maps.places.PlacesService(map);
 
-            // Add click event listener to the map
             map.addListener('click', function(event) {
                 handleMapClick(event.latLng);
             });
@@ -68,95 +66,36 @@
             geocoder.geocode({ address: location }, function(results, status) {
                 if (status === 'OK' && results[0].geometry.location) {
                     const locationCoordinates = results[0].geometry.location;
-                    // Clear existing markers
-                    clearMarkers();
-                    // Create a marker for the searched location
-                    const marker = new google.maps.Marker({
-                        position: locationCoordinates,
-                        map: map
-                    });
-                    // Set the map center to the searched location
                     map.setCenter(locationCoordinates);
-                    // Store the marker for removal
-                    markers.push(marker);
+
+                    // Clear markers created through clicking
+                    clearClickMarkers();
                 }
             });
         }
 
-        function clearMarkers() {
-            // Clear destination markers
-            if (originMarker) {
-                originMarker.setMap(null);
-            }
-
-            if (destinationMarker) {
-                destinationMarker.setMap(null);
-            }
-
-            // Clear markers created by clicking
-            for (let marker of markers) {
-                marker.setMap(null);
-            }
-            
-            // Clear both originMarker and destinationMarker
-            originMarker = null;
-            destinationMarker = null;
-
-            // Clear the markers array
-            markers = [];
-        }
-
         function handleMapClick(location) {
-            // Remove existing markers
-            if (originMarker) {
-                originMarker.setMap(null);
-            }
+            // Clear existing markers created through clicking
+            clearClickMarkers();
 
-            if (destinationMarker) {
-                destinationMarker.setMap(null);
-            }
-
-            // Add a new marker at the clicked location
             const marker = new google.maps.Marker({
                 position: location,
                 map: map
             });
 
-            // Determine if it's the origin or destination marker
-            if (!originMarker) {
-                originMarker = marker;
-            } else {
-                destinationMarker = marker;
+            clickMarkers.push(marker);
+        }
 
-                // Use Places API to find nearby places at the destination location
-                placesService.nearbySearch({
-                    location: location,
-                    radius: 1000, // Adjust the radius as needed
-                    type: ['tourist_attraction'] // Specify the type of places you want to display
-                }, function(results, status) {
-                    if (status === 'OK' && results.length > 0) {
-                        // Display nearby places on the map
-                        results.forEach(function(place) {
-                            const placeMarker = new google.maps.Marker({
-                                position: place.geometry.location,
-                                map: map,
-                                title: place.name
-                            });
-
-                            // Allow the user to select a place by clicking on it
-                            placeMarker.addListener('click', function() {
-                                addDestination(place);
-                            });
-                        });
-                    }
-                });
+        function clearClickMarkers() {
+            for (const marker of clickMarkers) {
+                marker.setMap(null);
             }
+            clickMarkers = [];
         }
 
         function addDestination(place) {
             selectedDestinations.push(place);
 
-            // Update the list of selected destinations on the webpage
             const destinationList = document.getElementById('destination-list');
             const destinationItem = document.createElement('li');
             destinationItem.textContent = place.name;
@@ -188,7 +127,16 @@
                 }
             });
         }
+
+        function clearMarkers() {
+            // Clear markers created through the destination search bar
+            originMarker.setMap(null);
+            destinationMarker.setMap(null);
+            selectedDestinations = [];
+
+            // Clear markers created through clicking
+            clearClickMarkers();
+        }
     </script>
-    <script src="firebase.html"></script>
 </body>
 </html>
