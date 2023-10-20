@@ -15,11 +15,11 @@
         <button onclick="searchLocation('origin')">Search</button>
     </div>
     <div>
-        <label for="destination">Enter ending location (e.g., address or place name):</label>
+        <label for "destination">Enter ending location (e.g., address or place name):</label>
         <input type="text" id="destination" placeholder="e.g., Los Angeles, CA">
         <button onclick="searchLocation('destination')">Search</button>
     </div>
-    <button onclick="calculateDistance()">Calculate Distance</button>
+    <button onclick="calculateRoute()">Calculate Route</button>
     <button onclick="clearMarkers()">Clear Markers</button>
     <div>
         <h2>Trip Details:</h2>
@@ -39,7 +39,7 @@
         let directionsRenderer;
         let placesService;
         let selectedDestinations = [];
-        let markers = []; // Store markers for easy removal
+        let markers = [];
 
         function initMap() {
             map = new google.maps.Map(document.getElementById('map'), {
@@ -51,10 +51,8 @@
             directionsRenderer = new google.maps.DirectionsRenderer();
             directionsRenderer.setMap(map);
 
-            // Enable Places services
             placesService = new google.maps.places.PlacesService(map);
 
-            // Add click event listener to the map
             map.addListener('click', function(event) {
                 handleMapClick(event.latLng);
             });
@@ -68,71 +66,67 @@
             geocoder.geocode({ address: location }, function(results, status) {
                 if (status === 'OK' && results[0].geometry.location) {
                     const locationCoordinates = results[0].geometry.location;
-                    // Clear existing markers
                     clearMarkers();
-                    // Create a marker for the searched location
                     const marker = new google.maps.Marker({
                         position: locationCoordinates,
                         map: map
                     });
-                    // Set the map center to the searched location
                     map.setCenter(locationCoordinates);
-                    // Store the marker for removal
                     markers.push(marker);
                 }
             });
         }
 
         function clearMarkers() {
-            // Clear destination markers
             if (originMarker) {
                 originMarker.setMap(null);
             }
+
             if (destinationMarker) {
                 destinationMarker.setMap(null);
             }
-            // Clear markers created by clicking
+
             for (let marker of markers) {
                 marker.setMap(null);
             }
-            // Clear both originMarker and destinationMarker
+           
             originMarker = null;
             destinationMarker = null;
-            // Clear the markers array
             markers = [];
         }
 
         function handleMapClick(location) {
-            // Remove existing markers
-            clearMarkers();
+            if (originMarker) {
+                originMarker.setMap(null);
+            }
 
-            // Add a new marker at the clicked location
+            if (destinationMarker) {
+                destinationMarker.setMap(null);
+            }
+
             const marker = new google.maps.Marker({
                 position: location,
                 map: map
             });
 
-            // Determine if it's the origin or destination marker
             if (!originMarker) {
                 originMarker = marker;
             } else {
                 destinationMarker = marker;
 
-                // Use Places API to find nearby places at the destination location
                 placesService.nearbySearch({
                     location: location,
-                    radius: 1000, // Adjust the radius as needed
-                    type: ['tourist_attraction'] // Specify the type of places you want to display
+                    radius: 1000,
+                    type: ['tourist_attraction']
                 }, function(results, status) {
                     if (status === 'OK' && results.length > 0) {
-                        // Display nearby places on the map
                         results.forEach(function(place) {
                             const placeMarker = new google.maps.Marker({
                                 position: place.geometry.location,
                                 map: map,
                                 title: place.name
                             });
-                            // Allow the user to select a place by clicking on it
+
                             placeMarker.addListener('click', function() {
                                 addDestination(place);
                             });
@@ -140,16 +134,6 @@
                     }
                 });
             }
-        }
-
-        function addDestination(place) {
-            selectedDestinations.push(place);
-
-            // Update the list of selected destinations on the webpage
-            const destinationList = document.getElementById('destination-list');
-            const destinationItem = document.createElement('li');
-            destinationItem.textContent = place.name;
-            destinationList.appendChild(destinationItem);
         }
 
         function calculateDistance() {
@@ -163,64 +147,82 @@
             const request = {
                 origin: origin,
                 destination: destination,
-                const request = {
-                    origin: origin,
-                    destination: destination,
-                    travelMode: 'DRIVING'
-                };
+                travelMode: 'DRIVING'
+            };
 
-                directionsService.route(request, function(response, status) {
-                    if (status === 'OK') {
-                        directionsRenderer.setDirections(response);
-                        const route = response.routes[0];
-                        const distance = route.legs[0].distance.text;
-                        distanceDisplay.textContent = `Distance: ${distance}`;
-                    } else {
-                        distanceDisplay.textContent = 'Unable to calculate distance.';
-                    }
-                });
-            }
-
-            // Function to get directions from selected destinations
-            function getDirectionsFromSelectedDestinations() {
-                if (selectedDestinations.length < 1) {
-                    alert("Please select at least one destination from the list.");
-                    return;
+            directionsService.route(request, function(response, status) {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(response);
+                    const route = response.routes[0];
+                    const distance = route.legs[0].distance.text;
+                    distanceDisplay.textContent = `Distance: ${distance}`;
+                } else {
+                    distanceDisplay.textContent = 'Unable to calculate distance.';
                 }
+            });
+        }
 
-                // Clear existing markers
-                clearMarkers();
+        // New function to calculate a new route with a selected destination
+        function calculateRoute() {
+            const originInput = document.getElementById('origin');
+            const destinationInput = document.getElementById('destination');
+            const distanceDisplay = document.getElementById('distance');
 
-                const originInput = document.getElementById('origin').value;
-                const destinationInput = document.getElementById('destination').value;
+            const origin = originInput.value;
+            const destination = destinationInput.value;
 
-                if (!originInput || !destinationInput) {
-                    alert("Please specify a valid start and end destination.");
-                    return;
-                }
-
-                const waypoints = selectedDestinations.map((destination) => ({
-                    location: destination.geometry.location,
+            const request = {
+                origin: origin,
+                destination: destination,
+                travelMode: 'DRIVING',
+                waypoints: selectedDestinations.map(place => ({
+                    location: place.geometry.location,
                     stopover: true
-                }));
+                }))
+            };
 
-                const request = {
-                    origin: originInput,
-                    destination: destinationInput,
-                    waypoints: waypoints,
-                    optimizeWaypoints: true, // Optimize the order of waypoints
-                    travelMode: 'DRIVING'
-                };
-
-                directionsService.route(request, function(response, status) {
-                    if (status === 'OK') {
-                        directionsRenderer.setDirections(response);
-                    } else {
-                        alert('Unable to calculate directions.');
-                    }
-                });
+            directionsService.route(request, function(response, status) {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(response);
+                    const route = response.routes[0];
+                    const distance = route.legs[0].distance.text;
+                    distanceDisplay.textContent = `Distance: ${distance}`;
+                } else {
+                    distanceDisplay.textContent = 'Unable to calculate route.';
+                }
+            });
+        }
+    </script>
+    <script>
+        // Code for selecting and adding destinations to the route
+        function selectDestination(index) {
+            if (index >= 0 && index < selectedDestinations.length) {
+                const destination = selectedDestinations[index];
+                selectedDestinations.splice(index, 1);
+                const destinationList = document.getElementById('destination-list');
+                destinationList.removeChild(destinationList.childNodes[index]);
+                calculateRoute();
             }
-        </script>
-        <script src="firebase.html"></script>
-    </body>
+        }
+
+        function addDestination(place) {
+            selectedDestinations.push(place);
+            const destinationList = document.getElementById('destination-list');
+            const destinationItem = document.createElement('li');
+            destinationItem.textContent = place.name;
+            const selectButton = document.createElement('button');
+            selectButton.textContent = 'Select';
+            selectButton.addEventListener('click', function() {
+                const index = selectedDestinations.indexOf(place);
+                if (index !== -1) {
+                    selectDestination(index);
+                }
+            });
+            destinationItem.appendChild(selectButton);
+            destinationList.appendChild(destinationItem);
+            calculateRoute();
+        }
+    </script>
+    <script src="firebase.html"></script>
+</body>
 </html>
