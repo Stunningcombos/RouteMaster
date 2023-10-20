@@ -6,6 +6,8 @@ body, h1, h2, ul, li, p, label {
 
 body {
     font-family: Arial, sans-serif;
+    max-width: 100%; /* Ensure the content fits within the screen width */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 h1 {
@@ -62,4 +64,3 @@ iframe {
 }
 
 /* Customize other elements as needed */
-
