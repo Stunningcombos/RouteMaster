@@ -8,6 +8,11 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+
+    <div class="splash">
+        <h1 class="fade-in">RouteMaster</h1>
+    </div>
+
     <h1>RouteMaster - Road Trip Planner</h1>
     <div>
         <label for="origin">Enter starting location (e.g., address or place name):</label>
@@ -136,6 +141,32 @@
             }
         }
 
+        function calculateDistance() {
+            const originInput = document.getElementById('origin');
+            const destinationInput = document.getElementById('destination');
+            const distanceDisplay = document.getElementById('distance');
+
+            const origin = originInput.value;
+            const destination = destinationInput.value;
+
+            const request = {
+                origin: origin,
+                destination: destination,
+                travelMode: 'DRIVING'
+            };
+
+            directionsService.route(request, function(response, status) {
+                if (status === 'OK') {
+                    directionsRenderer.setDirections(response);
+                    const route = response.routes[0];
+                    const distance = route.legs[0].distance.text;
+                    distanceDisplay.textContent = `Distance: ${distance}`;
+                } else {
+                    distanceDisplay.textContent = 'Unable to calculate distance.';
+                }
+            });
+        }
+
         function calculateRoute() {
             const originInput = document.getElementById('origin');
             const destinationInput = document.getElementById('destination');
@@ -196,5 +227,7 @@
             calculateRoute();
         }
     </script>
+    <script src="firebase.html"></script>
 </body>
 </html>
+
