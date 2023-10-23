@@ -5,17 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RouteMaster</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CBsERzAhOxoJ0P7bmLEu8uORLp-dFbM&libraries=places&callback=initMap" async defer></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="intro">
         <h1 class="logo-header">
             <span class="logo">Route</span><span class="logo">Master</span>
         </h1>
     </div>
 
-  
+    <header>
+        <h4>RouteMaster</h4>
+    </header>
+
+    <h1>RouteMaster - Road Trip Planner</h1>
+    <div>
+        <label for="origin">Enter starting location (e.g., address or place name):</label>
+        <input type="text" id="origin" placeholder="e.g., San Francisco, CA">
+        <button onclick="searchLocation('origin')">Search</button>
+    </div>
+    <div>
+        <label for="destination">Enter ending location (e.g., address or place name):</label>
+        <input type="text" id="destination" placeholder="e.g., Los Angeles, CA">
+        <button onclick="searchLocation('destination')">Search</button>
+    </div>
+    <button onclick="calculateRoute()">Calculate Route</button>
+    <button onclick="clearMarkers()">Clear Markers</button>
+    <div>
+        <h2>Trip Details:</h2>
+        <p id="distance">Distance: N/A</p>
+    </div>
+    <div>
+        <h2>Selected Destinations:</h2>
+        <ul id="destination-list"></ul>
+    </div>
+    <div id="map" style="height: 400px;"></div>
+    
     <script src="app.js"></script>
 </body>
 </html>
