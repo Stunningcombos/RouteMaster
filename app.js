@@ -8,6 +8,14 @@ let placesService;
 let selectedDestinations = [];
 let markers = [];
 
+const splash = document.querySelector('.splash');
+
+document.addEventListener('DOMContentLoaded', (e) => {
+    setTimeout(() => {
+        splash.classList.add('display-none');
+    }, 2000);
+});
+
 // Function to initialize the map and other components
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
