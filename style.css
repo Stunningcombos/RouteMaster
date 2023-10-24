@@ -5,10 +5,11 @@
     font-family: 'Courier New', Courier, monospace;
 }
 
-/* Map style 
+ Map style 
 #map {
     position: relative;
     margin: 20px auto;
+/*
     width: 80%;
     max-width: 800px;
     height: 300px;
