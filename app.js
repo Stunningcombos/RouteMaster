@@ -283,3 +283,16 @@ function addDestination(place) {
     destinationList.appendChild(destinationItem);
     calculateRoute();
 }
+// New function to add a new destination
+function addNewDestination() {
+    const newDestinationInput = document.getElementById('new-destination');
+    const newDestinationName = newDestinationInput.value.trim();
+    if (newDestinationName !== '') {
+        const newDestination = {
+            name: newDestinationName,
+            geometry: { location: map.getCenter() }
+        };
+        addDestination(newDestination);
+        newDestinationInput.value = '';
+    }
+}

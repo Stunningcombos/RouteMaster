@@ -68,7 +68,18 @@
         </form>
     </div>
 -->
+<div class="input-container">
+    <label for="new-destination">Add a new destination:</label>
+    <input type="text" id="new-destination" placeholder="e.g., New Destination">
+    <button onclick="addNewDestination()">Add Destination</button>
+</div>
 
+<div class="selected-destinations">
+    <h2>Selected Destinations:</h2>
+    <ul id="destination-list" class="sortable-list">
+        <!-- List of selected destinations goes here -->
+    </ul>
+</div>
     <div>
         <label for="origin">Enter starting location (e.g., address or place name):</label>
         <input type="text" id="origin" placeholder="e.g., San Francisco, CA">
