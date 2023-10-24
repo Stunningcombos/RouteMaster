@@ -73,13 +73,17 @@ header h4{
     transition: ease-in-out 0.5s;
 }
 
-.input-container {
-    margin-bottom: 20px;
+div {
+    background-color: #f5f5f5;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 label {
-    display: block;
-    margin-bottom: 5px;
+    font-size: 1.2rem;
+    color: #333;
 }
 
 input {
@@ -87,40 +91,49 @@ input {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    outline: none;
-    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
-.search-button, .action-button {
+button {
     padding: 10px 20px;
     font-weight: bold;
     font-size: 1rem;
     color: #fff;
     border: none;
     border-radius: 5px;
-    background: #009579;
+    background-color: #009579;
     outline: none;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background-color 0.2s;
+    margin-top: 10px;
 }
 
-.search-button:hover, .action-button:hover {
-    background: #007f67;
-}
-
-.trip-details, .selected-destinations {
-    margin-top: 20px;
+button:hover {
+    background-color: #007f67;
 }
 
 h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    font-size: 1.6rem;
+    color: #009579;
+    margin: 10px 0;
 }
 
 #distance {
     font-weight: bold;
+    color: #333;
 }
 
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    font-size: 1rem;
+    color: #555;
+    margin: 5px 0;
+}
 
 /* login
 body{
