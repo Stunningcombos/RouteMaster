@@ -8,7 +8,7 @@
 /* Map Styles */
 #map {
     position: relative; /* Set the position to relative */
-    z-index: 2; /* Ensure it's displayed above other elements */
+    
     margin-top: 20px;
 }
 header {
