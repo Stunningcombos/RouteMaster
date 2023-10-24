@@ -39,6 +39,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
     })
 })
 
+/*
 //login
 function setFormMessage(formElement, type, message){
     const messageElement = formElement.querySelector('form__message');
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () =>{
         })
     });
 });
-
+*/
 
 
 // Function to initialize the map and other components
