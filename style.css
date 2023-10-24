@@ -7,12 +7,12 @@
 
 /* Map style */
 #map {
-    position: relative;
-    width: 100%; /* Use 100% width of the parent container */
+    /*position: relative;
+    width: 100%; /* Use 100% width of the parent container 
     height: 400px;
     /*border: 1px solid #ccc;
     /*box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);*/
-    /*z-index: 2; /* Place the map below other elements */
+    z-index: 2; /* Place the map below other elements */
 }
 
 header {
