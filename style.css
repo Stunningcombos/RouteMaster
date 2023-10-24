@@ -5,11 +5,12 @@
     font-family: 'Courier New', Courier, monospace;
    /* background-color: antiquewhite; */
 }
-/* Map Styles 
+/* Map Styles */
 #map {
     position: relative; 
     margin-top: 20px;
-}*/
+    height: 400px;
+}
 
 header {
     position: relative;
