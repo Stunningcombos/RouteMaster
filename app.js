@@ -97,6 +97,25 @@ document.addEventListener('DOMContentLoaded', () =>{
 */
 
 
+    (function() {
+        // Make the destination list sortable
+        ("#destination-list").sortable();
+        // Update the order of the destinations when the user stops dragging
+        ("#destination-list").on("sortstop", function(event, ui) {
+            // Get the updated order
+            const order = $(this).sortable("toArray");
+            console.log("Updated order:", order);
+        });
+    });
+
+    const sortable = new Sortable(destination-list, {
+        animation: 150,
+        onEnd: function (evt) {
+            // Implement the logic to update the order of selected destinations
+            // based on the user's drag-and-drop actions
+        },
+    });
+
 // Function to initialize the map and other components
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -285,6 +304,7 @@ function addDestination(place) {
 }
 // New function to add a new destination
 function addNewDestination() {
+    let int count = 1;
     const newDestinationInput = document.getElementById('new-destination');
     const newDestinationName = newDestinationInput.value.trim();
     if (newDestinationName !== '') {

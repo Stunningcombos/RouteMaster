@@ -7,40 +7,10 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB8CBsERzAhOxoJ0P7bmLEu8uORLp-dFbM&libraries=places&callback=initMap" async defer></script>
     <link rel="stylesheet" href="style.css">
     <!-- Include the Sortable.js library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<ul id="destination-list">
-    <!-- Each list item represents a destination -->
-    <li class="sortable-item">Location 1</li>
-    <li class="sortable-item">Location 2</li>
-    <li class="sortable-item">Location 3</li>
-    <!-- Add more destinations as needed -->
-</ul>
-<script>
-    $(function() {
-        // Make the destination list sortable
-        $("#destination-list").sortable();
-        // Update the order of the destinations when the user stops dragging
-        $("#destination-list").on("sortstop", function(event, ui) {
-            // Get the updated order
-            const order = $(this).sortable("toArray");
-            console.log("Updated order:", order);
-        });
-    });
-</script>
-
-
-<script>
-    const sortable = new Sortable(destination-list, {
-        animation: 150,
-        onEnd: function (evt) {
-            // Implement the logic to update the order of selected destinations
-            // based on the user's drag-and-drop actions
-        },
-    });
-</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 </head>
 
 <body>
@@ -106,7 +76,12 @@
 <div class="input-container">
     <label for="new-destination">Add a new destination:</label>
     <input type="text" id="new-destination" placeholder="e.g., New Destination">
-    <button onclick="addNewDestination()">Add Destination</button>
+    <button onclick="addNewDestination()">Add Destination Add<ul id="destination-list"></ul></button>
+    <ul id="destination-list">
+        <li class="sortable-item">Location 1</li>
+        <li class="sortable-item">Location 2</li>
+        <li class="sortable-item">Location 3</li>
+    </ul>
 </div>
 
 <div class="selected-destinations">
