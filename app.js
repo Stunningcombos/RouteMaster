@@ -305,10 +305,12 @@ function addDestination(place) {
 }
 // New function to add a new destination
 function addNewDestination() {
-    count = 1;
     const newDestinationInput = document.getElementById('new-destination');
     const newDestinationName = newDestinationInput.value.trim();
     if (newDestinationName !== '') {
+        // Increment the location number
+        locationNumber++;
+        
         const newDestination = {
             name: newDestinationName,
             geometry: { location: map.getCenter() }

@@ -73,15 +73,11 @@
         </form>
     </div>
 -->
-<div class="input-container">
+
+<div>
     <label for="new-destination">Add a new destination:</label>
-    <input type="text" id="new-destination" placeholder="e.g., New Destination">
-    <button onclick="addNewDestination()">Add Destination</button>
-    <ul id="destination-list">
-        <li class="sortable-item">Location 1</li>
-        <li class="sortable-item">Location 2</li>
-        <li class="sortable-item">Location 3</li>
-    </ul>
+    <input type="text" id="new-destination" placeholder="e.g., Another City, Country">
+    <button onclick="addNewDestination()">Add</button>
 </div>
 
 <div class="selected-destinations">
@@ -115,7 +111,7 @@
         <ul id="destination-list"></ul>
     </div>
 
-    <map id="map"></map>
+    <div id="map"></div>
 
     <script src="app.js"></script>
 </body>
