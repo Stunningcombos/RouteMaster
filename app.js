@@ -331,15 +331,6 @@ function addNewDestination() {
         const destinationList = document.getElementById('destination-list');
         const destinationItem = document.createElement('li');
         destinationItem.textContent = `Location ${locationNumber}: ${newDestinationName}`;
-        const selectButton = document.createElement('button');
-        selectButton.textContent = 'Select';
-        selectButton.addEventListener('click', function() {
-            const index = selectedDestinations.indexOf(newDestination);
-            if (index !== -1) {
-                selectDestination(index);
-            }
-        });
-        destinationItem.appendChild(selectButton);
         destinationList.appendChild(destinationItem);
 
         newDestinationInput.value = '';
