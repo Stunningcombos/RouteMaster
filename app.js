@@ -7,7 +7,7 @@ let directionsRenderer;
 let placesService;
 let selectedDestinations = [];
 let markers = [];
-let count;
+let locationNumber = 1;
 
 //The cool intro 
 let intro = document.querySelector('.intro');
@@ -303,6 +303,16 @@ function addDestination(place) {
     destinationList.appendChild(destinationItem);
     calculateRoute();
 }
+(function() {
+    // Make the destination list sortable
+    $("#destination-list").sortable();
+    // Update the order of the destinations when the user stops dragging
+    $("#destination-list").on("sortstop", function(event, ui) {
+        // Get the updated order
+        const order = $(this).sortable("toArray");
+        console.log("Updated order:", order);
+    });
+})();
 // New function to add a new destination
 function addNewDestination() {
     const newDestinationInput = document.getElementById('new-destination');
