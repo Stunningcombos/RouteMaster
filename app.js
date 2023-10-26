@@ -7,50 +7,115 @@ let directionsRenderer;
 let placesService;
 let selectedDestinations = [];
 let markers = [];
-
-// The cool intro
-let intro = document.querySelector('.intro');
-let logoSpan = document.querySelectorAll('.logo');
 let locationNumber = 1;
 
-window.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        logoSpan.forEach((span, idx) => {
-            setTimeout(() => {
+//The cool intro 
+let intro = document.querySelector('.intro');
+let logo = document.querySelector('logo.header');
+let logoSpan = document.querySelectorAll('.logo');
+
+window.addEventListener('DOMContentLoaded', ()=>{
+
+    setTimeout(()=>{
+
+        logoSpan.forEach((span, idx)=>{
+            setTimeout(()=>{
                 span.classList.add('active');
-            }, (idx + 1) * 400);
+            }, (idx + 1) * 400)
         });
 
-        setTimeout(() => {
-            logoSpan.forEach((span, idx) => {
-                setTimeout(() => {
+
+        setTimeout(()=>{
+            logoSpan.forEach((span, idx)=>{
+                setTimeout(()=>{
                     span.classList.remove('active');
                     span.classList.add('fade');
-                }, (idx + 1) * 50);
-            });
-        }, 2000);
+                }, (idx + 1) * 50)
+            })
+        },2000);
 
-        setTimeout(() => {
-            intro.style.top = '-100vh';
-        }, 2300);
+        setTimeout(()=>{
+            intro.style.top =  '-100vh'
+        },2300)
+    })
+})
+
+/*
+//login
+function setFormMessage(formElement, type, message){
+    const messageElement = formElement.querySelector('form__message');
+
+    messageElement.textContent = message;
+    messageElement.classList.remove('form__message--success', 'form__message--error');
+    messageElement.classList.add('form__message--${type}');
+}
+
+function setInputError(inputElement, message) {
+    inputElement.classList.add('form__input--error');
+    inputElement.parentElement.querySelector('.form__input-error-message').textContent = message;
+}
+
+function clearInputError(inputElement){
+    inputElement.classList.remove('form__input--error');
+    inputElement.parentElement.querySelector('.form__input-error-message').textContent = "";
+}
+
+document.addEventListener('DOMContentLoaded', () =>{
+    const loginForm = document.querySelector('#login');
+    const createAccountForm = document.querySelector('#createAccount');
+
+    document.querySelector('#linkCreateAccount').addEventListener('click', e => {
+        e.preventDefault
+        loginForm.classList.add('form--hidden');
+        createAccountForm.classList.remove('form--hidden');
+    });
+
+    document.querySelector('#linkLogin').addEventListener('click', e => {
+        e.preventDefault
+        loginForm.classList.remove('form--hidden');
+        createAccountForm.classList.add('form--hidden');
+    });
+
+    loginForm.addEventListener('submit', e => {
+        e.preventDefault
+
+            //ajax/fetch
+
+        setFormMessage(loginForm, "error", "Invalid Username/Password Combination");
+    });
+
+    document.querySelectorAll('.form__input').forEach(inputElement =>{
+        inputElement.addEventListener("blur", e => {
+            if (e.target.id === "signupUsername" && e.target.value.length > 0 && e.target.value.length < 10) {
+                setInputError(inputElement, "Username must be at least 10 characters in length");
+            }
+        });
+        inputElement.addEventListener('input', e => {
+            clearInputError(inputElement);
+        })
     });
 });
+*/
 
-(function () {
-    // Make the destination list sortable
-    $("#destination-list").sortable({
-        update: function (event, ui) {
-            calculateRoute();
-        }
+
+    (function() {
+        // Make the destination list sortable
+        ("#destination-list").sortable();
+        // Update the order of the destinations when the user stops dragging
+        ("#destination-list").on("sortstop", function(event, ui) {
+            // Get the updated order
+            const order = $(this).sortable("toArray");
+            console.log("Updated order:", order);
+        });
     });
 
-    // Update the order of the destinations when the user stops dragging
-    $("#destination-list").on("sortstop", function (event, ui) {
-        // Get the updated order
-        const order = $("#destination-list").sortable("toArray");
-        console.log("Updated order:", order);
+    const sortable = new Sortable(destination-list, {
+        animation: 150,
+        onEnd: function (evt) {
+            // Implement the logic to update the order of selected destinations
+            // based on the user's drag-and-drop actions
+        },
     });
-})();
 
 // Function to initialize the map and other components
 function initMap() {
@@ -65,7 +130,7 @@ function initMap() {
 
     placesService = new google.maps.places.PlacesService(map);
 
-    map.addListener('click', function (event) {
+    map.addListener('click', function(event) {
         handleMapClick(event.latLng);
     });
 }
@@ -76,7 +141,7 @@ function searchLocation(inputFieldId) {
     const location = inputField.value;
 
     const geocoder = new google.maps.Geocoder();
-    geocoder.geocode({ address: location }, function (results, status) {
+    geocoder.geocode({ address: location }, function(results, status) {
         if (status === 'OK' && results[0].geometry.location) {
             const locationCoordinates = results[0].geometry.location;
             clearMarkers();
@@ -133,16 +198,16 @@ function handleMapClick(location) {
             location: location,
             radius: 1000,
             type: ['tourist_attraction']
-        }, function (results, status) {
+        }, function(results, status) {
             if (status === 'OK' && results.length > 0) {
-                results.forEach(function (place) {
+                results.forEach(function(place) {
                     const placeMarker = new google.maps.Marker({
                         position: place.geometry.location,
                         map: map,
                         title: place.name
                     });
 
-                    placeMarker.addListener('click', function () {
+                    placeMarker.addListener('click', function() {
                         addDestination(place);
                     });
                 });
@@ -166,7 +231,7 @@ function calculateDistance() {
         travelMode: 'DRIVING'
     };
 
-    directionsService.route(request, function (response, status) {
+    directionsService.route(request, function(response, status) {
         if (status === 'OK') {
             directionsRenderer.setDirections(response);
             const route = response.routes[0];
@@ -187,17 +252,17 @@ function calculateRoute() {
     const origin = originInput.value;
     const destination = destinationInput.value;
 
-    const order = $("#destination-list").sortable("toArray");
-    const waypoints = order.map(index => selectedDestinations[index].geometry.location);
-
     const request = {
         origin: origin,
         destination: destination,
         travelMode: 'DRIVING',
-        waypoints: waypoints.map(location => ({ location, stopover: true }))
+        waypoints: selectedDestinations.map(place => ({
+            location: place.geometry.location,
+            stopover: true
+        }))
     };
 
-    directionsService.route(request, function (response, status) {
+    directionsService.route(request, function(response, status) {
         if (status === 'OK') {
             directionsRenderer.setDirections(response);
             const route = response.routes[0];
@@ -228,7 +293,7 @@ function addDestination(place) {
     destinationItem.textContent = place.name;
     const selectButton = document.createElement('button');
     selectButton.textContent = 'Select';
-    selectButton.addEventListener('click', function () {
+    selectButton.addEventListener('click', function() {
         const index = selectedDestinations.indexOf(place);
         if (index !== -1) {
             selectDestination(index);
@@ -238,28 +303,56 @@ function addDestination(place) {
     destinationList.appendChild(destinationItem);
     calculateRoute();
 }
-
+(function() {
+    // Make the destination list sortable
+    $("#destination-list").sortable();
+    // Update the order of the destinations when the user stops dragging
+    $("#destination-list").on("sortstop", function(event, ui) {
+        // Get the updated order
+        const order = $(this).sortable("toArray");
+        console.log("Updated order:", order);
+    });
+})();
 // New function to add a new destination
 function addNewDestination() {
     const newDestinationInput = document.getElementById('new-destination');
     const newDestinationName = newDestinationInput.value.trim();
     if (newDestinationName !== '') {
         // Increment the location number based on the number of existing destinations
-        locationNumber++;
+        const locationNumber = selectedDestinations.length + 1;
 
         const newDestination = {
             name: newDestinationName,
             geometry: { location: map.getCenter() }
         };
-
         addDestination(newDestination);
 
         // Create a new list item with the location number and destination name
         const destinationList = document.getElementById('destination-list');
         const destinationItem = document.createElement('li');
+        destinationItem.classList.add('sortable-item'); // Add a class for Sortable.js
         destinationItem.textContent = `Location ${locationNumber}: ${newDestinationName}`;
         destinationList.appendChild(destinationItem);
 
         newDestinationInput.value = '';
     }
 }
+(function() {
+    // Initialize Sortable.js for the destination list
+    const sortableList = document.getElementById('destination-list');
+    const sortable = new Sortable(sortableList, {
+        animation: 150,
+        handle: '.sortable-item', // Specify the handle for dragging
+    });
+
+    sortableList.addEventListener('sortupdate', function() {
+        // Update the order of selected destinations
+        const newOrder = [];
+        const listItems = sortableList.querySelectorAll('.sortable-item');
+        listItems.forEach((item, index) => {
+            newOrder.push(item.textContent);
+        });
+        // Now 'newOrder' contains the updated order of destinations
+    });
+})();
+
