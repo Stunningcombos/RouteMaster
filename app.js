@@ -318,14 +318,30 @@ function addNewDestination() {
     const newDestinationInput = document.getElementById('new-destination');
     const newDestinationName = newDestinationInput.value.trim();
     if (newDestinationName !== '') {
-        // Increment the location number
-        locationNumber++;
-        
+        // Increment the location number based on the number of existing destinations
+        const locationNumber = selectedDestinations.length + 1;
+
         const newDestination = {
             name: newDestinationName,
             geometry: { location: map.getCenter() }
         };
         addDestination(newDestination);
+
+        // Create a new list item with the location number and destination name
+        const destinationList = document.getElementById('destination-list');
+        const destinationItem = document.createElement('li');
+        destinationItem.textContent = `Location ${locationNumber}: ${newDestinationName}`;
+        const selectButton = document.createElement('button');
+        selectButton.textContent = 'Select';
+        selectButton.addEventListener('click', function() {
+            const index = selectedDestinations.indexOf(newDestination);
+            if (index !== -1) {
+                selectDestination(index);
+            }
+        });
+        destinationItem.appendChild(selectButton);
+        destinationList.appendChild(destinationItem);
+
         newDestinationInput.value = '';
     }
 }
