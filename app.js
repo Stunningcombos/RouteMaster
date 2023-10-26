@@ -7,7 +7,7 @@ let directionsRenderer;
 let placesService;
 let selectedDestinations = [];
 let markers = [];
-let locationNumber = 1;
+let locationNumb
 
 //The cool intro 
 let intro = document.querySelector('.intro');
@@ -318,41 +318,14 @@ function addNewDestination() {
     const newDestinationInput = document.getElementById('new-destination');
     const newDestinationName = newDestinationInput.value.trim();
     if (newDestinationName !== '') {
-        // Increment the location number based on the number of existing destinations
-        const locationNumber = selectedDestinations.length + 1;
-
+        // Increment the location number
+        locationNumber++;
+        
         const newDestination = {
             name: newDestinationName,
             geometry: { location: map.getCenter() }
         };
         addDestination(newDestination);
-
-        // Create a new list item with the location number and destination name
-        const destinationList = document.getElementById('destination-list');
-        const destinationItem = document.createElement('li');
-        destinationItem.classList.add('sortable-item'); // Add a class for Sortable.js
-        destinationItem.textContent = `Location ${locationNumber}: ${newDestinationName}`;
-        destinationList.appendChild(destinationItem);
-
         newDestinationInput.value = '';
     }
 }
-(function() {
-    // Initialize Sortable.js for the destination list
-    const sortableList = document.getElementById('destination-list');
-    const sortable = new Sortable(sortableList, {
-        animation: 150,
-        handle: '.sortable-item', // Specify the handle for dragging
-    });
-
-    sortableList.addEventListener('sortupdate', function() {
-        // Update the order of selected destinations
-        const newOrder = [];
-        const listItems = sortableList.querySelectorAll('.sortable-item');
-        listItems.forEach((item, index) => {
-            newOrder.push(item.textContent);
-        });
-        // Now 'newOrder' contains the updated order of destinations
-    });
-})();
-
