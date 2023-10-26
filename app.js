@@ -303,7 +303,7 @@ function addDestination(place) {
     destinationList.appendChild(destinationItem);
     calculateRoute();
 }
-(function() {
+/*(function() {
     // Make the destination list sortable
     $("#destination-list").sortable();
     // Update the order of the destinations when the user stops dragging
@@ -312,7 +312,7 @@ function addDestination(place) {
         const order = $(this).sortable("toArray");
         console.log("Updated order:", order);
     });
-})();
+})();*/
 // New function to add a new destination
 function addNewDestination() {
     const newDestinationInput = document.getElementById('new-destination');
