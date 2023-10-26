@@ -8,16 +8,17 @@
 /* Map style */
 #map {
     position: relative;
-    width: 100%;
+    width: 100%; 
     height: 400px;
 }
 
-.header {
+header {
     position: relative;
     left: 0;
     top: 0;
     width: 100%;
     height: 80px;
+    z-index: 1; /* Place the header above the map */
 }
 
 header h4 {
@@ -73,7 +74,7 @@ div {
     margin: 10px 0;
     border-radius: 5px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-    z-index: 1;
+    z-index: 1; /* Place other elements above the map */
 }
 
 label {
