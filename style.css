@@ -104,6 +104,13 @@ button {
     margin-top: 10px;
 }
 
+.sortable-item {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin: 5px;
+    cursor: move;
+}
+
 button:hover {
     background-color: #007f67;
 }
