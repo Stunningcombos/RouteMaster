@@ -7,6 +7,7 @@ let directionsRenderer;
 let placesService;
 let selectedDestinations = [];
 let markers = [];
+let count;
 
 //The cool intro 
 let intro = document.querySelector('.intro');
@@ -304,7 +305,7 @@ function addDestination(place) {
 }
 // New function to add a new destination
 function addNewDestination() {
-    let int count = 1;
+    count = 1;
     const newDestinationInput = document.getElementById('new-destination');
     const newDestinationName = newDestinationInput.value.trim();
     if (newDestinationName !== '') {
