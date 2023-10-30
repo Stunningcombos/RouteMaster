@@ -139,7 +139,7 @@ li {
 }
 
 
-/* login
+
 body{
     --color-primary: #009579;
     --color-primary-dark: #007f67;
@@ -167,7 +167,7 @@ body{
     border-radius: var(--border-radius);
     background: #ffffff;
 }
-
+/*
 .container,
 .form__input,
 .form__button{
