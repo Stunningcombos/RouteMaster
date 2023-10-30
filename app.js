@@ -9,7 +9,7 @@ let selectedDestinations = [];
 let markers = [];
 let locationNumb
 
-//The cool intro 
+//The cool i
 let intro = document.querySelector('.intro');
 let logo = document.querySelector('logo.header');
 let logoSpan = document.querySelectorAll('.logo');
